@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import {engagementMessageOverTimeChartOptions} from "./EngagementHelper";
+import {engagementMessageOverTimeChartOptions} from "./engagement-helper-utils";
 import {messageCountList, channels} from './mock-data';
 
 const EngagementMessagesOverTime: React.FC = () => {

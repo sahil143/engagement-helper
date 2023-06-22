@@ -19,7 +19,7 @@ export const engagementMessageOverTimeDataForChart = (
   }, {} as { [key: string]: unknown[][] });
 };
 
-export const filterSeriesDataForChart = (
+export const modifySeriesDataForChart = (
   messages: MessageCount[],
   channels: Channel[]
 ): Highcharts.SeriesSplineOptions[] =>
@@ -37,7 +37,7 @@ export const engagementMessageOverTimeChartOptions = (
   msg: MessageCount[],
   channels: Channel[]
 ): Highcharts.Options => {
-  const series = filterSeriesDataForChart(msg, channels);
+  const series = modifySeriesDataForChart(msg, channels);
   return {
     title: {
       text: '',
@@ -75,7 +75,7 @@ export const engagementMessageOverTimeChartOptions = (
       headerFormat: "<b>{series.name}</b><br />",
       xDateFormat: "%y-%m-%d",
       pointFormatter(): string {
-        const self = this as unknown as Highcharts.Point;
+        const self = this as Highcharts.Point;
         return `${self.y} messages on ${Highcharts.dateFormat(
           "%b %d",
           self.x
