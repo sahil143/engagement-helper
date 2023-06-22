@@ -3,7 +3,7 @@
 This project is built using React and Highcharts
 
 ## Output
-[TODO]
+<img width="1606" alt="Screenshot 2023-06-22 at 10 49 13 AM" src="https://github.com/sahil143/engagement-helper/assets/9278015/38670a9c-c1a3-4c61-acf1-cc4974fa6c33">
 
 ## Prerequisites
 
