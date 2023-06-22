@@ -1,4 +1,5 @@
 import { Channel, MessageCount } from "./type";
+import * as Highcharts from "highcharts";
 
 export const engagementMessageOverTimeDataForChart = (
   msgCountList: MessageCount[]
@@ -18,20 +19,29 @@ export const engagementMessageOverTimeDataForChart = (
   }, {} as { [key: string]: unknown[][] });
 };
 
-export const engagementMessageOverTimeChartOptions = (
-  msg: MessageCount[],
+export const filterSeriesDataForChart = (
+  messages: MessageCount[],
   channels: Channel[]
-) => {
-  const seriesData = Object.entries(engagementMessageOverTimeDataForChart(msg))
+): Highcharts.SeriesSplineOptions[] =>
+  Object.entries(engagementMessageOverTimeDataForChart(messages))
     .filter(([, value]) => value.length > 1)
     .map(([key, data]) => {
       return {
+        type: 'spline',
         name: channels.find((ch) => ch.id === key)?.label,
         data,
       };
     });
 
+export const engagementMessageOverTimeChartOptions = (
+  msg: MessageCount[],
+  channels: Channel[]
+): Highcharts.Options => {
+  const series = filterSeriesDataForChart(msg, channels);
   return {
+    title: {
+      text: '',
+    },
     chart: {
       type: "spline",
     },
@@ -44,13 +54,14 @@ export const engagementMessageOverTimeChartOptions = (
     },
     xAxis: {
       type: "datetime",
-      startOnTick: false,
       tickInterval: 24 * 3600 * 1000,
-      plotLines: [{
-        color: '#FF0000',
-        width: 2,
-        value: 5
-    }]
+      plotLines: [
+        {
+          width: 1,
+          // Hardcoded as there is no clear indication if the plot line should be on middle of xAxis or a particular datapoint
+          value: Date.UTC(2022, 9, 17),
+        },
+      ],
     },
     plotOptions: {
       spline: {
@@ -59,6 +70,18 @@ export const engagementMessageOverTimeChartOptions = (
         },
       },
     },
-    series: seriesData,
+    tooltip: {
+      shared: true,
+      headerFormat: "<b>{series.name}</b><br />",
+      xDateFormat: "%y-%m-%d",
+      pointFormatter(): string {
+        const self = this as unknown as Highcharts.Point;
+        return `${self.y} messages on ${Highcharts.dateFormat(
+          "%b %d",
+          self.x
+        )}`;
+      },
+    },
+    series,
   };
 };
